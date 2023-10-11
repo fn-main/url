@@ -152,12 +152,20 @@ export function parseUrlParams({
   return parseQueryString({ queryString: search, paramTypeMap, autoInferType });
 }
 
-export function buildQueryString(params: { [key: string]: any }): string {
+export function buildQueryString({
+  params,
+  encodeURI = true,
+}: {
+  params: { [key: string]: any };
+  encodeURI?: Boolean;
+}): string {
   return (
     "?" +
     Object.keys(params)
       .map((key) => {
-        return `${key}=${encodeURIComponent(stringifyValue(params[key]))}`;
+        let value = stringifyValue(params[key]);
+        value = encodeURI ? encodeURIComponent(value) : value;
+        return `${key}=${value}`;
       })
       .join("&")
   );
@@ -182,7 +190,7 @@ export function overrideUrl({
     }
   }
 
-  const queryString = buildQueryString(oldParams);
+  const queryString = buildQueryString({ params: oldParams, encodeURI: false });
   const ret = `${domain}${pathname}${queryString}${hash}`;
 
   return ret;
