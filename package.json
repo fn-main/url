@@ -1,0 +1,17 @@
+{
+  "name": "@fnmain/url",
+  "version": "1.0.0",
+  "description": "url utils",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node dist/test.js"
+  },
+  "author": "DC",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.8.3",
+    "typescript": "^5.2.2"
+  }
+}
