@@ -22,9 +22,7 @@ function parseValue(value: string, type: string): any {
       return Number(value);
     case "bool":
     case "boolean":
-      return value === "0" || value.toLowerCase() === "false"
-        ? false
-        : Boolean(value);
+      return value === "0" || value.toLowerCase() === "false" ? false : Boolean(value);
     case "date":
       return new Date(Date.parse(value));
     case "object":
@@ -59,18 +57,19 @@ function inferType(value: string): Type {
 
   // json
   if (/(^\{.*\}$)|(^\[.*\]$)/.test(value)) {
-    return Type.JSON;
+    try {
+      JSON.parse(value);
+      return Type.JSON;
+    } catch {
+      // to nothing
+    }
   }
 
   // date
   if (/^\d{4}-\d{1,2}-\d{1,2}.+\d{1,2}:\d{1,2}/.test(value)) {
     // may be datetime
     const timestamp = Date.parse(value);
-    if (
-      isNaN(timestamp) === false &&
-      timestamp >= 0 &&
-      timestamp < 4102444800000
-    ) {
+    if (isNaN(timestamp) === false && timestamp >= 0 && timestamp < 4102444800000) {
       // date is between 1970-2100
       return Type.Date;
     }
