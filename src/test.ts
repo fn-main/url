@@ -6,7 +6,10 @@ let url =
 let params = parseUrlParams({ url });
 console.log("parseUrlParams", JSON.stringify(params, null, 4));
 
-url = overrideUrl({ url, params: { new: "newStr" } });
+url = overrideUrl({
+  url,
+  params: { str: "newStr", json: { a: 2 }, arr: ["one", 2], date: new Date("2020-1-1") },
+});
 console.log("overrideUrl", url);
 
 params = parseUrlParams({ url });

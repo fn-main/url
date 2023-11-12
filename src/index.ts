@@ -104,6 +104,10 @@ function stringifyValue(value: any) {
   if (value instanceof Date) {
     return value.toISOString();
   }
+  const prototype = Object.prototype.toString.call(value);
+  if (prototype === "[object Object]" || prototype === "[object Array]") {
+    return JSON.stringify(value);
+  }
   return String(value);
 }
 
