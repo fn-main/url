@@ -1,12 +1,18 @@
 enum Type {
   Undefined,
   Null,
-  NaN,
   Boolean,
   Number,
   JSON,
   Date,
   String,
+}
+
+function isEmpty(value: any) {
+  if (value === undefined || value === null || value === "") {
+    return true;
+  }
+  return false;
 }
 
 function parseValue(value: string, type: string): any {
@@ -32,17 +38,17 @@ function parseValue(value: string, type: string): any {
 }
 
 function inferType(value: string): Type {
-  // empty
-  if (!value || value === "undefined") {
+  // empty string
+  if (value === "") {
+    return Type.String;
+  }
+
+  if (value === "undefined") {
     return Type.Undefined;
   }
 
   if (value === "null") {
     return Type.Null;
-  }
-
-  if (value === "NaN") {
-    return Type.NaN;
   }
 
   // bool
@@ -85,8 +91,6 @@ function inferValue(value: string): any {
       return undefined;
     case Type.Null:
       return null;
-    case Type.NaN:
-      return NaN;
     case Type.Boolean:
       return Boolean(value);
     case Type.Number:
@@ -157,29 +161,42 @@ export function parseUrlParams({
 
 export function buildQueryString({
   params,
-  encodeURI = true,
+  encodeURI = false,
+  removeEmptyParams = false,
 }: {
   params: { [key: string]: any };
   encodeURI?: Boolean;
+  removeEmptyParams?: Boolean;
 }): string {
-  return (
-    "?" +
-    Object.keys(params)
-      .map((key) => {
-        let value = stringifyValue(params[key]);
-        value = encodeURI ? encodeURIComponent(value) : value;
-        return `${key}=${value}`;
-      })
-      .join("&")
-  );
+  let entries = Object.entries(params);
+  if (removeEmptyParams) {
+    entries = entries.filter(([key, value]) => {
+      if (isEmpty(value)) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  const paramPairs = entries.map(([key, value]) => {
+    let strValue = stringifyValue(value);
+    strValue = encodeURI ? encodeURIComponent(strValue) : strValue;
+    return `${key}=${strValue}`;
+  });
+
+  return "?" + paramPairs.join("&");
 }
 
 export function overrideUrl({
   url,
   params,
+  encodeURI = false,
+  removeEmptyParams = false,
 }: {
   url: string;
   params: { [key: string]: any };
+  encodeURI?: Boolean;
+  removeEmptyParams?: Boolean;
 }): string {
   const { domain, pathname, search, hash } = parseUrl(url);
   const oldParams = parseQueryString({
@@ -193,7 +210,7 @@ export function overrideUrl({
     }
   }
 
-  const queryString = buildQueryString({ params: oldParams, encodeURI: false });
+  const queryString = buildQueryString({ params: oldParams, encodeURI, removeEmptyParams });
   const ret = `${domain}${pathname}${queryString}${hash}`;
 
   return ret;

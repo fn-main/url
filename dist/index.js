@@ -5,13 +5,18 @@ var Type;
 (function (Type) {
     Type[Type["Undefined"] = 0] = "Undefined";
     Type[Type["Null"] = 1] = "Null";
-    Type[Type["NaN"] = 2] = "NaN";
-    Type[Type["Boolean"] = 3] = "Boolean";
-    Type[Type["Number"] = 4] = "Number";
-    Type[Type["JSON"] = 5] = "JSON";
-    Type[Type["Date"] = 6] = "Date";
-    Type[Type["String"] = 7] = "String";
+    Type[Type["Boolean"] = 2] = "Boolean";
+    Type[Type["Number"] = 3] = "Number";
+    Type[Type["JSON"] = 4] = "JSON";
+    Type[Type["Date"] = 5] = "Date";
+    Type[Type["String"] = 6] = "String";
 })(Type || (Type = {}));
+function isEmpty(value) {
+    if (value === undefined || value === null || value === "") {
+        return true;
+    }
+    return false;
+}
 function parseValue(value, type) {
     type = type.toLowerCase();
     switch (type) {
@@ -34,15 +39,15 @@ function parseValue(value, type) {
     }
 }
 function inferType(value) {
-    // empty
-    if (!value || value === "undefined") {
+    // empty string
+    if (value === "") {
+        return Type.String;
+    }
+    if (value === "undefined") {
         return Type.Undefined;
     }
     if (value === "null") {
         return Type.Null;
-    }
-    if (value === "NaN") {
-        return Type.NaN;
     }
     // bool
     if (value === "true" || value === "false") {
@@ -80,8 +85,6 @@ function inferValue(value) {
             return undefined;
         case Type.Null:
             return null;
-        case Type.NaN:
-            return NaN;
         case Type.Boolean:
             return Boolean(value);
         case Type.Number:
@@ -131,18 +134,25 @@ function parseUrlParams({ url, paramTypeMap, autoInferType = true, }) {
     return parseQueryString({ queryString: search, paramTypeMap, autoInferType });
 }
 exports.parseUrlParams = parseUrlParams;
-function buildQueryString({ params, encodeURI = true, }) {
-    return ("?" +
-        Object.keys(params)
-            .map((key) => {
-            let value = stringifyValue(params[key]);
-            value = encodeURI ? encodeURIComponent(value) : value;
-            return `${key}=${value}`;
-        })
-            .join("&"));
+function buildQueryString({ params, encodeURI = false, removeEmptyParams = false, }) {
+    let entries = Object.entries(params);
+    if (removeEmptyParams) {
+        entries = entries.filter(([key, value]) => {
+            if (isEmpty(value)) {
+                return false;
+            }
+            return true;
+        });
+    }
+    const paramPairs = entries.map(([key, value]) => {
+        let strValue = stringifyValue(value);
+        strValue = encodeURI ? encodeURIComponent(strValue) : strValue;
+        return `${key}=${strValue}`;
+    });
+    return "?" + paramPairs.join("&");
 }
 exports.buildQueryString = buildQueryString;
-function overrideUrl({ url, params, }) {
+function overrideUrl({ url, params, encodeURI = false, removeEmptyParams = false, }) {
     const { domain, pathname, search, hash } = parseUrl(url);
     const oldParams = parseQueryString({
         queryString: search,
@@ -154,7 +164,7 @@ function overrideUrl({ url, params, }) {
             oldParams[key] = params[key];
         }
     }
-    const queryString = buildQueryString({ params: oldParams, encodeURI: false });
+    const queryString = buildQueryString({ params: oldParams, encodeURI, removeEmptyParams });
     const ret = `${domain}${pathname}${queryString}${hash}`;
     return ret;
 }
