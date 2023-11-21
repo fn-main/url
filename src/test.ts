@@ -1,7 +1,7 @@
-import { overrideUrl, parseQueryString, parseUrlParams } from "./index";
+import { overrideUrl, parseQueryString, parseUrlParams, removeUrlParams } from "./index";
 
 let url =
-  'https://domain/path?str=中文&num=21&json={"a":1}&arr=[1,"two",3]&fakeJson={x:x}&bool=true&date=2020-01-01T00:00:00.000Z&undefined=undefined&null=null&empty=#hash';
+  'https://domain/path?percent=%1&str=str&num=21&json={"a":1}&arr=[1,"two",3]&fakeJson={x:x}&bool=true&date=2020-01-01T00:00:00.000Z&undefined=undefined&null=null&empty=#hash';
 
 let params = parseUrlParams({ url });
 console.log("parseUrlParams", JSON.stringify(params, null, 4));
@@ -43,3 +43,8 @@ url = overrideUrl({
   removeEmptyParams: true,
 });
 console.log("overrideUrl", url);
+
+url = removeUrlParams(url, ["str", "num"]);
+console.log("removeUrlParams", url);
+url = removeUrlParams(url, { json: true });
+console.log("removeUrlParams", url);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
+exports.removeUrlParams = exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
 var Type;
 (function (Type) {
     Type[Type["Undefined"] = 0] = "Undefined";
@@ -16,6 +16,21 @@ function isEmpty(value) {
         return true;
     }
     return false;
+}
+function safeDecodeURIComponent(str) {
+    try {
+        // Replace standalone '%' with '%25'
+        const sanitizedStr = str.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
+        return decodeURIComponent(sanitizedStr);
+    }
+    catch (e) {
+        if (e instanceof URIError) {
+            console.error("URI malformed: ", e);
+            // Return the original string or a default value
+            return str;
+        }
+        throw e; // Re-throw other unexpected errors
+    }
 }
 function parseValue(value, type) {
     type = type.toLowerCase();
@@ -112,7 +127,7 @@ function parseQueryString({ queryString, paramTypeMap, autoInferType = true, }) 
     queryString = queryString.replace(/^\?/, "");
     const paramPairs = queryString.split("&");
     for (const pair of paramPairs) {
-        const [key, value] = pair.split("=").map(decodeURIComponent);
+        const [key, value] = pair.split("=").map(safeDecodeURIComponent);
         if (paramTypeMap && paramTypeMap[key]) {
             // have parsing rule, parse
             ret[key] = parseValue(value, paramTypeMap[key]);
@@ -169,6 +184,26 @@ function overrideUrl({ url, params, encodeURI = false, removeEmptyParams = false
     return ret;
 }
 exports.overrideUrl = overrideUrl;
+function removeUrlParams(url, params) {
+    // Determine the parameters to remove
+    let paramsToRemove = Array.isArray(params) ? params : Object.keys(params);
+    // Iterate over each parameter to remove
+    paramsToRemove.forEach((param) => {
+        // Create a regex pattern to find the parameter in the URL
+        const pattern = `([?&])${param}=([^&]*)`;
+        // Replace occurrences of the parameter with an appropriate character
+        url = url.replace(new RegExp(pattern, "g"), (match, start, value) => {
+            // If the parameter starts with '?', replace it with '?', otherwise remove it
+            return start === "?" ? "?" : "";
+        });
+    });
+    // Clean up any leading '&' if it's the first character in the query string
+    url = url.replace(/(\?&)/, "?");
+    // Clean up any trailing '?' or '&' left in the URL
+    url = url.replace(/[?&]$/, "");
+    return url;
+}
+exports.removeUrlParams = removeUrlParams;
 function parseUrl(url) {
     const regex = /^((?:https?:\/\/)?[^\/?#]+)([^?#]*)(\?[^#]*)?(#.*)?$/;
     const match = url.match(regex);
@@ -187,3 +222,4 @@ function parseUrl(url) {
         hash: match[4] || "",
     };
 }
+//# sourceMappingURL=index.js.map

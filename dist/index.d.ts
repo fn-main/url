@@ -31,3 +31,5 @@ export declare function overrideUrl({ url, params, encodeURI, removeEmptyParams,
     encodeURI?: Boolean;
     removeEmptyParams?: Boolean;
 }): string;
+export declare function removeUrlParams(url: string, params: string[] | Record<string, any>): string;
+//# sourceMappingURL=index.d.ts.map

@@ -15,6 +15,21 @@ function isEmpty(value: any) {
   return false;
 }
 
+function safeDecodeURIComponent(str: string) {
+  try {
+    // Replace standalone '%' with '%25'
+    const sanitizedStr = str.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
+    return decodeURIComponent(sanitizedStr);
+  } catch (e) {
+    if (e instanceof URIError) {
+      console.error("URI malformed: ", e);
+      // Return the original string or a default value
+      return str;
+    }
+    throw e; // Re-throw other unexpected errors
+  }
+}
+
 function parseValue(value: string, type: string): any {
   type = type.toLowerCase();
   switch (type) {
@@ -131,7 +146,7 @@ export function parseQueryString({
   const paramPairs = queryString.split("&");
 
   for (const pair of paramPairs) {
-    const [key, value] = pair.split("=").map(decodeURIComponent);
+    const [key, value] = pair.split("=").map(safeDecodeURIComponent);
     if (paramTypeMap && paramTypeMap[key]) {
       // have parsing rule, parse
       ret[key] = parseValue(value, paramTypeMap[key]);
@@ -214,6 +229,30 @@ export function overrideUrl({
   const ret = `${domain}${pathname}${queryString}${hash}`;
 
   return ret;
+}
+
+export function removeUrlParams(url: string, params: string[] | Record<string, any>): string {
+  // Determine the parameters to remove
+  let paramsToRemove: string[] = Array.isArray(params) ? params : Object.keys(params);
+
+  // Iterate over each parameter to remove
+  paramsToRemove.forEach((param) => {
+    // Create a regex pattern to find the parameter in the URL
+    const pattern: string = `([?&])${param}=([^&]*)`;
+
+    // Replace occurrences of the parameter with an appropriate character
+    url = url.replace(new RegExp(pattern, "g"), (match, start, value) => {
+      // If the parameter starts with '?', replace it with '?', otherwise remove it
+      return start === "?" ? "?" : "";
+    });
+  });
+
+  // Clean up any leading '&' if it's the first character in the query string
+  url = url.replace(/(\?&)/, "?");
+  // Clean up any trailing '?' or '&' left in the URL
+  url = url.replace(/[?&]$/, "");
+
+  return url;
 }
 
 function parseUrl(url: string) {
