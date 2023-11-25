@@ -24,12 +24,8 @@ function safeDecodeURIComponent(str) {
         return decodeURIComponent(sanitizedStr);
     }
     catch (e) {
-        if (e instanceof URIError) {
-            console.error("URI malformed: ", e);
-            // Return the original string or a default value
-            return str;
-        }
-        throw e; // Re-throw other unexpected errors
+        console.error("safeDecodeURIComponent Error: ", e);
+        return str;
     }
 }
 function parseValue(value, type) {

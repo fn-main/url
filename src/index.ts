@@ -21,12 +21,8 @@ function safeDecodeURIComponent(str: string) {
     const sanitizedStr = str.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
     return decodeURIComponent(sanitizedStr);
   } catch (e) {
-    if (e instanceof URIError) {
-      console.error("URI malformed: ", e);
-      // Return the original string or a default value
-      return str;
-    }
-    throw e; // Re-throw other unexpected errors
+    console.error("safeDecodeURIComponent Error: ", e);
+    return str;
   }
 }
 
