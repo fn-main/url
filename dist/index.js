@@ -121,7 +121,7 @@ function stringifyValue(value) {
 function parseQueryString({ queryString, paramTypeMap, autoInferType = true, }) {
     const ret = {};
     queryString = queryString.replace(/^\?/, "");
-    const paramPairs = queryString.split("&");
+    const paramPairs = queryString ? queryString.split("&") : [];
     for (const pair of paramPairs) {
         const [key, value] = pair.split("=").map(safeDecodeURIComponent);
         if (paramTypeMap && paramTypeMap[key]) {

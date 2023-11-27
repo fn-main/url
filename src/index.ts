@@ -139,7 +139,7 @@ export function parseQueryString({
 
   queryString = queryString.replace(/^\?/, "");
 
-  const paramPairs = queryString.split("&");
+  const paramPairs = queryString ? queryString.split("&") : [];
 
   for (const pair of paramPairs) {
     const [key, value] = pair.split("=").map(safeDecodeURIComponent);

@@ -41,4 +41,7 @@ url = (0, index_1.removeUrlParams)(url, ["str", "num"]);
 console.log("removeUrlParams", url);
 url = (0, index_1.removeUrlParams)(url, { json: true });
 console.log("removeUrlParams", url);
+url = "https://fnmain.com/";
+url = (0, index_1.overrideUrl)({ url, params: { token: "token" } });
+console.log(url);
 //# sourceMappingURL=test.js.map

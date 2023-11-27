@@ -48,3 +48,7 @@ url = removeUrlParams(url, ["str", "num"]);
 console.log("removeUrlParams", url);
 url = removeUrlParams(url, { json: true });
 console.log("removeUrlParams", url);
+
+url = "https://fnmain.com/";
+url = overrideUrl({ url, params: { token: "token" } });
+console.log(url);
