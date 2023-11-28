@@ -1,4 +1,11 @@
-import { overrideUrl, parseQueryString, parseUrlParams, removeUrlParams } from "./index";
+import {
+  decodeMiniProgramWebviewUrl,
+  encodeMiniProgramWebviewUrl,
+  overrideUrl,
+  parseQueryString,
+  parseUrlParams,
+  removeUrlParams,
+} from "./index";
 
 let url =
   'https://domain/path?percent=%1&str=str&num=21&json={"a":1}&arr=[1,"two",3]&fakeJson={x:x}&bool=true&date=2020-01-01T00:00:00.000Z&undefined=undefined&null=null&empty=#hash';
@@ -51,4 +58,10 @@ console.log("removeUrlParams", url);
 
 url = "https://fnmain.com/";
 url = overrideUrl({ url, params: { token: "token" } });
+console.log(url);
+
+url = "https://fnmain.com/?a=1&b=2";
+url = encodeMiniProgramWebviewUrl(url);
+console.log(url);
+url = decodeMiniProgramWebviewUrl(url);
 console.log(url);

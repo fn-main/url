@@ -32,4 +32,6 @@ export declare function overrideUrl({ url, params, encodeURI, removeEmptyParams,
     removeEmptyParams?: Boolean;
 }): string;
 export declare function removeUrlParams(url: string, params: string[] | Record<string, any>): string;
+export declare function encodeMiniProgramWebviewUrl(webviewUrl: string): string;
+export declare function decodeMiniProgramWebviewUrl(webviewUrl: string): string;
 //# sourceMappingURL=index.d.ts.map

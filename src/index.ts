@@ -271,3 +271,14 @@ function parseUrl(url: string) {
     hash: match[4] || "",
   };
 }
+
+export function encodeMiniProgramWebviewUrl(webviewUrl: string) {
+  return webviewUrl.replace(/\?/g, "^question").replace(/=/g, "^equal").replace(/&/g, "^and");
+}
+
+export function decodeMiniProgramWebviewUrl(webviewUrl: string) {
+  return webviewUrl
+    .replace(/\^question/g, "?")
+    .replace(/\^equal/g, "=")
+    .replace(/\^and/g, "&");
+}

@@ -44,4 +44,9 @@ console.log("removeUrlParams", url);
 url = "https://fnmain.com/";
 url = (0, index_1.overrideUrl)({ url, params: { token: "token" } });
 console.log(url);
+url = "https://fnmain.com/?a=1&b=2";
+url = (0, index_1.encodeMiniProgramWebviewUrl)(url);
+console.log(url);
+url = (0, index_1.decodeMiniProgramWebviewUrl)(url);
+console.log(url);
 //# sourceMappingURL=test.js.map
