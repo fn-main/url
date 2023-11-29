@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decodeMiniProgramWebviewUrl = exports.encodeMiniProgramWebviewUrl = exports.removeUrlParams = exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
+exports.decodeMiniProgramWebviewUrl = exports.encodeMiniProgramWebviewUrl = exports.parseUrl = exports.removeUrlParams = exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
 var Type;
 (function (Type) {
     Type[Type["Undefined"] = 0] = "Undefined";
@@ -218,6 +218,7 @@ function parseUrl(url) {
         hash: match[4] || "",
     };
 }
+exports.parseUrl = parseUrl;
 function encodeMiniProgramWebviewUrl(webviewUrl) {
     return webviewUrl.replace(/\?/g, "^question").replace(/=/g, "^equal").replace(/&/g, "^and");
 }

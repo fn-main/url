@@ -49,4 +49,5 @@ url = (0, index_1.encodeMiniProgramWebviewUrl)(url);
 console.log(url);
 url = (0, index_1.decodeMiniProgramWebviewUrl)(url);
 console.log(url);
+console.log("parseUrl", (0, index_1.parseUrl)(url));
 //# sourceMappingURL=test.js.map

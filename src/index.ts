@@ -251,7 +251,7 @@ export function removeUrlParams(url: string, params: string[] | Record<string, a
   return url;
 }
 
-function parseUrl(url: string) {
+export function parseUrl(url: string) {
   const regex = /^((?:https?:\/\/)?[^\/?#]+)([^?#]*)(\?[^#]*)?(#.*)?$/;
   const match = url.match(regex);
 

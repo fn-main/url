@@ -3,6 +3,7 @@ import {
   encodeMiniProgramWebviewUrl,
   overrideUrl,
   parseQueryString,
+  parseUrl,
   parseUrlParams,
   removeUrlParams,
 } from "./index";
@@ -65,3 +66,5 @@ url = encodeMiniProgramWebviewUrl(url);
 console.log(url);
 url = decodeMiniProgramWebviewUrl(url);
 console.log(url);
+
+console.log("parseUrl", parseUrl(url));
