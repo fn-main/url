@@ -9,7 +9,7 @@ import {
 } from "./index";
 
 let url =
-  'https://domain/path?percent=%1&str=str&num=21&json={"a":1}&arr=[1,"two",3]&fakeJson={x:x}&bool=true&date=2020-01-01T00:00:00.000Z&undefined=undefined&null=null&empty=#hash';
+  'https://domain/path?percent=%1&str=str&num=21&json={"a":1}&arr=[1,"two",3]&fakeJson={x:x}&bool1=true&bool2=false&date=2020-01-01T00:00:00.000Z&undefined=undefined&null=null&empty=#hash';
 
 let params = parseUrlParams({ url });
 console.log("parseUrlParams", JSON.stringify(params, null, 4));

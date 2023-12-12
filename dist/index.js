@@ -28,6 +28,10 @@ function safeDecodeURIComponent(str) {
         return str;
     }
 }
+function stringToBool(value) {
+    const falsyValues = ["false", "", "0", "null", "undefined", "NaN"];
+    return !falsyValues.includes(value);
+}
 function parseValue(value, type) {
     type = type.toLowerCase();
     switch (type) {
@@ -41,7 +45,7 @@ function parseValue(value, type) {
             return Number(value);
         case "bool":
         case "boolean":
-            return value === "0" || value.toLowerCase() === "false" ? false : Boolean(value);
+            return stringToBool(value);
         case "date":
             return new Date(Date.parse(value));
         case "object":
@@ -97,7 +101,7 @@ function inferValue(value) {
         case Type.Null:
             return null;
         case Type.Boolean:
-            return Boolean(value);
+            return stringToBool(value);
         case Type.Number:
             return Number(value);
         case Type.JSON:
