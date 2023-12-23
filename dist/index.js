@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decodeMiniProgramWebviewUrl = exports.encodeMiniProgramWebviewUrl = exports.parseUrl = exports.removeUrlParams = exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
+exports.joinPath = exports.decodeMiniProgramWebviewUrl = exports.encodeMiniProgramWebviewUrl = exports.parseUrl = exports.removeUrlParams = exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
 var Type;
 (function (Type) {
     Type[Type["Undefined"] = 0] = "Undefined";
@@ -234,4 +234,8 @@ function decodeMiniProgramWebviewUrl(webviewUrl) {
         .replace(/\^and/g, "&");
 }
 exports.decodeMiniProgramWebviewUrl = decodeMiniProgramWebviewUrl;
+function joinPath(...segments) {
+    return segments.join("/").replace(/([^:]\/)\/+/g, "$1");
+}
+exports.joinPath = joinPath;
 //# sourceMappingURL=index.js.map

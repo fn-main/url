@@ -40,4 +40,5 @@ export declare function parseUrl(url: string): {
 };
 export declare function encodeMiniProgramWebviewUrl(webviewUrl: string): string;
 export declare function decodeMiniProgramWebviewUrl(webviewUrl: string): string;
+export declare function joinPath(...segments: string[]): string;
 //# sourceMappingURL=index.d.ts.map
