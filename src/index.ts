@@ -288,3 +288,7 @@ export function decodeMiniProgramWebviewUrl(webviewUrl: string) {
     .replace(/\^equal/g, "=")
     .replace(/\^and/g, "&");
 }
+
+export function joinPath(...segments: string[]) {
+  return segments.join("/").replace(/([^:]\/)\/+/g, "$1");
+}
