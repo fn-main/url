@@ -1,6 +1,6 @@
 {
   "name": "@fnmain/url",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "url utils",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
