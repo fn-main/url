@@ -180,10 +180,12 @@ export function buildQueryString({
   params,
   encodeURI = false,
   removeEmptyParams = false,
+  sort = false,
 }: {
   params: { [key: string]: any };
   encodeURI?: Boolean;
   removeEmptyParams?: Boolean;
+  sort?: Boolean;
 }): string {
   let entries = Object.entries(params);
   if (removeEmptyParams) {
@@ -194,12 +196,21 @@ export function buildQueryString({
       return true;
     });
   }
+  if (sort) {
+    entries = entries.sort(([key1], [key2]) => {
+      return key1.localeCompare(key2);
+    });
+  }
 
   const paramPairs = entries.map(([key, value]) => {
     let strValue = stringifyValue(value);
     strValue = encodeURI ? encodeURIComponent(strValue) : strValue;
     return `${key}=${strValue}`;
   });
+
+  if (paramPairs.length === 0) {
+    return "";
+  }
 
   return "?" + paramPairs.join("&");
 }
@@ -209,11 +220,13 @@ export function overrideUrl({
   params,
   encodeURI = false,
   removeEmptyParams = false,
+  sort = false,
 }: {
   url: string;
   params: { [key: string]: any };
   encodeURI?: Boolean;
   removeEmptyParams?: Boolean;
+  sort?: Boolean;
 }): string {
   const { domain, pathname, search, hash } = parseUrl(url);
   const oldParams = parseQueryString({
@@ -227,7 +240,7 @@ export function overrideUrl({
     }
   }
 
-  const queryString = buildQueryString({ params: oldParams, encodeURI, removeEmptyParams });
+  const queryString = buildQueryString({ params: oldParams, encodeURI, removeEmptyParams, sort });
   const ret = `${domain}${pathname}${queryString}${hash}`;
 
   return ret;

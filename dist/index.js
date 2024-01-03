@@ -149,7 +149,7 @@ function parseUrlParams({ url, paramTypeMap, autoInferType = true, }) {
     return parseQueryString({ queryString: search, paramTypeMap, autoInferType });
 }
 exports.parseUrlParams = parseUrlParams;
-function buildQueryString({ params, encodeURI = false, removeEmptyParams = false, }) {
+function buildQueryString({ params, encodeURI = false, removeEmptyParams = false, sort = false, }) {
     let entries = Object.entries(params);
     if (removeEmptyParams) {
         entries = entries.filter(([key, value]) => {
@@ -159,15 +159,23 @@ function buildQueryString({ params, encodeURI = false, removeEmptyParams = false
             return true;
         });
     }
+    if (sort) {
+        entries = entries.sort(([key1], [key2]) => {
+            return key1.localeCompare(key2);
+        });
+    }
     const paramPairs = entries.map(([key, value]) => {
         let strValue = stringifyValue(value);
         strValue = encodeURI ? encodeURIComponent(strValue) : strValue;
         return `${key}=${strValue}`;
     });
+    if (paramPairs.length === 0) {
+        return "";
+    }
     return "?" + paramPairs.join("&");
 }
 exports.buildQueryString = buildQueryString;
-function overrideUrl({ url, params, encodeURI = false, removeEmptyParams = false, }) {
+function overrideUrl({ url, params, encodeURI = false, removeEmptyParams = false, sort = false, }) {
     const { domain, pathname, search, hash } = parseUrl(url);
     const oldParams = parseQueryString({
         queryString: search,
@@ -179,7 +187,7 @@ function overrideUrl({ url, params, encodeURI = false, removeEmptyParams = false
             oldParams[key] = params[key];
         }
     }
-    const queryString = buildQueryString({ params: oldParams, encodeURI, removeEmptyParams });
+    const queryString = buildQueryString({ params: oldParams, encodeURI, removeEmptyParams, sort });
     const ret = `${domain}${pathname}${queryString}${hash}`;
     return ret;
 }

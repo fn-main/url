@@ -16,20 +16,22 @@ export declare function parseUrlParams({ url, paramTypeMap, autoInferType, }: {
 }): {
     [key: string]: any;
 };
-export declare function buildQueryString({ params, encodeURI, removeEmptyParams, }: {
+export declare function buildQueryString({ params, encodeURI, removeEmptyParams, sort, }: {
     params: {
         [key: string]: any;
     };
     encodeURI?: Boolean;
     removeEmptyParams?: Boolean;
+    sort?: Boolean;
 }): string;
-export declare function overrideUrl({ url, params, encodeURI, removeEmptyParams, }: {
+export declare function overrideUrl({ url, params, encodeURI, removeEmptyParams, sort, }: {
     url: string;
     params: {
         [key: string]: any;
     };
     encodeURI?: Boolean;
     removeEmptyParams?: Boolean;
+    sort?: Boolean;
 }): string;
 export declare function removeUrlParams(url: string, params: string[] | Record<string, any>): string;
 export declare function parseUrl(url: string): {

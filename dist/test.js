@@ -50,4 +50,5 @@ console.log(url);
 url = (0, index_1.decodeMiniProgramWebviewUrl)(url);
 console.log(url);
 console.log("parseUrl", (0, index_1.parseUrl)(url));
+console.log("sort", (0, index_1.overrideUrl)({ url: "https://example.com?c=3", params: { b: 2, a: 1 }, sort: true }));
 //# sourceMappingURL=test.js.map

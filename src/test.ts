@@ -1,4 +1,5 @@
 import {
+  buildQueryString,
   decodeMiniProgramWebviewUrl,
   encodeMiniProgramWebviewUrl,
   overrideUrl,
@@ -68,3 +69,8 @@ url = decodeMiniProgramWebviewUrl(url);
 console.log(url);
 
 console.log("parseUrl", parseUrl(url));
+
+console.log(
+  "sort",
+  overrideUrl({ url: "https://example.com?c=3", params: { b: 2, a: 1 }, sort: true })
+);
