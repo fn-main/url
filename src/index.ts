@@ -271,7 +271,7 @@ export function removeUrlParams(url: string, params: string[] | Record<string, a
 }
 
 export function parseUrl(url: string) {
-  const regex = /^((?:https?:\/\/)?[^\/?#]+)([^?#]*)(\?[^#]*)?(#.*)?$/;
+  const regex = /^(?:(https?:\/\/)?([^\/?#]*))?(?:(\/[^?#]*))?(?:(\?[^#]*))?(?:(#.*)?)?$/;
   const match = url.match(regex);
 
   if (!match) {
@@ -284,10 +284,10 @@ export function parseUrl(url: string) {
   }
 
   return {
-    domain: match[1] || "",
-    pathname: match[2] || "",
-    search: match[3] || "",
-    hash: match[4] || "",
+    domain: match[2] || "",
+    pathname: match[3] || "",
+    search: match[4] || "",
+    hash: match[5] || "",
   };
 }
 

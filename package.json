@@ -1,12 +1,12 @@
 {
   "name": "@fnmain/url",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "url utils",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "node dist/test.js",
+    "test": "tsc && node dist/test.js",
     "pub": "npm run build && npm publish --access public --registry=https://registry.npmjs.org/ && node sync-npmmirror.js "
   },
   "author": "DC",
