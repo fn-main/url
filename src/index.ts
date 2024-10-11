@@ -271,7 +271,7 @@ export function removeUrlParams(url: string, params: string[] | Record<string, a
 }
 
 export function parseUrl(url: string) {
-  const regex = /^(?:(https?:\/\/)?([^\/?#]*))?(?:(\/[^?#]*))?(?:(\?[^#]*))?(?:(#.*)?)?$/;
+  const regex = /^(https?:\/\/)?(([^\/?#:]+)(:\d+)?)?(\/[^?#]*)?(\?[^#]*)?(#.*)?$/;
   const match = url.match(regex);
 
   if (!match) {
@@ -283,11 +283,15 @@ export function parseUrl(url: string) {
     };
   }
 
+  // 合并 protocol 和　domain
+  const protocol = match[1] || "";
+  const domain = match[2] || "";
+
   return {
-    domain: match[2] || "",
-    pathname: match[3] || "",
-    search: match[4] || "",
-    hash: match[5] || "",
+    domain: protocol + domain,
+    pathname: match[5] || "",
+    search: match[6] || "",
+    hash: match[7] || "",
   };
 }
 
