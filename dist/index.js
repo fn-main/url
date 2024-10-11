@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.joinPath = exports.decodeMiniProgramWebviewUrl = exports.encodeMiniProgramWebviewUrl = exports.parseUrl = exports.removeUrlParams = exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
+exports.safeDecodeURI = exports.safeEncodeURI = exports.safeDecodeURIComponent = exports.safeEncodeURIComponent = exports.isEncoded = exports.joinPath = exports.decodeMiniProgramWebviewUrl = exports.encodeMiniProgramWebviewUrl = exports.parseUrl = exports.removeUrlParams = exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
 var Type;
 (function (Type) {
     Type[Type["Undefined"] = 0] = "Undefined";
@@ -17,17 +17,16 @@ function isEmpty(value) {
     }
     return false;
 }
-function safeDecodeURIComponent(str) {
-    try {
-        // Replace standalone '%' with '%25'
-        const sanitizedStr = str.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
-        return decodeURIComponent(sanitizedStr);
-    }
-    catch (e) {
-        console.error("safeDecodeURIComponent Error: ", e);
-        return str;
-    }
-}
+// function safeDecodeURIComponent(str: string) {
+//   try {
+//     // Replace standalone '%' with '%25'
+//     const sanitizedStr = str.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
+//     return decodeURIComponent(sanitizedStr);
+//   } catch (e) {
+//     console.error("safeDecodeURIComponent Error: ", e);
+//     return str;
+//   }
+// }
 function stringToBool(value) {
     const falsyValues = ["false", "", "0", "null", "undefined", "NaN"];
     return !falsyValues.includes(value);
@@ -246,4 +245,39 @@ function joinPath(...segments) {
     return segments.join("/").replace(/([^:]\/)\/+/g, "$1");
 }
 exports.joinPath = joinPath;
+function isEncoded(str) {
+    try {
+        return str !== decodeURIComponent(str);
+    }
+    catch (e) {
+        return false; // 如果解码时发生错误，表示不是有效的编码
+    }
+}
+exports.isEncoded = isEncoded;
+function safeEncodeURIComponent(str) {
+    return isEncoded(str) ? str : encodeURIComponent(str);
+}
+exports.safeEncodeURIComponent = safeEncodeURIComponent;
+function safeDecodeURIComponent(str) {
+    try {
+        return isEncoded(str) ? decodeURIComponent(str) : str;
+    }
+    catch (e) {
+        return str; // 如果解码时发生错误，返回原字符串
+    }
+}
+exports.safeDecodeURIComponent = safeDecodeURIComponent;
+function safeEncodeURI(str) {
+    return isEncoded(str) ? str : encodeURI(str);
+}
+exports.safeEncodeURI = safeEncodeURI;
+function safeDecodeURI(str) {
+    try {
+        return isEncoded(str) ? decodeURI(str) : str;
+    }
+    catch (e) {
+        return str; // 如果解码时发生错误，返回原字符串
+    }
+}
+exports.safeDecodeURI = safeDecodeURI;
 //# sourceMappingURL=index.js.map

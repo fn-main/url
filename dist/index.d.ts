@@ -43,4 +43,9 @@ export declare function parseUrl(url: string): {
 export declare function encodeMiniProgramWebviewUrl(webviewUrl: string): string;
 export declare function decodeMiniProgramWebviewUrl(webviewUrl: string): string;
 export declare function joinPath(...segments: string[]): string;
+export declare function isEncoded(str: string): boolean;
+export declare function safeEncodeURIComponent(str: string): string;
+export declare function safeDecodeURIComponent(str: string): string;
+export declare function safeEncodeURI(str: string): string;
+export declare function safeDecodeURI(str: string): string;
 //# sourceMappingURL=index.d.ts.map

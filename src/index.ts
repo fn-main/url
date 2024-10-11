@@ -15,16 +15,16 @@ function isEmpty(value: any) {
   return false;
 }
 
-function safeDecodeURIComponent(str: string) {
-  try {
-    // Replace standalone '%' with '%25'
-    const sanitizedStr = str.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
-    return decodeURIComponent(sanitizedStr);
-  } catch (e) {
-    console.error("safeDecodeURIComponent Error: ", e);
-    return str;
-  }
-}
+// function safeDecodeURIComponent(str: string) {
+//   try {
+//     // Replace standalone '%' with '%25'
+//     const sanitizedStr = str.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
+//     return decodeURIComponent(sanitizedStr);
+//   } catch (e) {
+//     console.error("safeDecodeURIComponent Error: ", e);
+//     return str;
+//   }
+// }
 
 function stringToBool(value: string): boolean {
   const falsyValues = ["false", "", "0", "null", "undefined", "NaN"];
@@ -304,4 +304,36 @@ export function decodeMiniProgramWebviewUrl(webviewUrl: string) {
 
 export function joinPath(...segments: string[]) {
   return segments.join("/").replace(/([^:]\/)\/+/g, "$1");
+}
+
+export function isEncoded(str: string): boolean {
+  try {
+    return str !== decodeURIComponent(str);
+  } catch (e) {
+    return false; // 如果解码时发生错误，表示不是有效的编码
+  }
+}
+
+export function safeEncodeURIComponent(str: string): string {
+  return isEncoded(str) ? str : encodeURIComponent(str);
+}
+
+export function safeDecodeURIComponent(str: string): string {
+  try {
+    return isEncoded(str) ? decodeURIComponent(str) : str;
+  } catch (e) {
+    return str; // 如果解码时发生错误，返回原字符串
+  }
+}
+
+export function safeEncodeURI(str: string): string {
+  return isEncoded(str) ? str : encodeURI(str);
+}
+
+export function safeDecodeURI(str: string): string {
+  try {
+    return isEncoded(str) ? decodeURI(str) : str;
+  } catch (e) {
+    return str; // 如果解码时发生错误，返回原字符串
+  }
 }
