@@ -2,6 +2,7 @@ import {
   buildQueryString,
   decodeMiniProgramWebviewUrl,
   encodeMiniProgramWebviewUrl,
+  isEncoded,
   overrideUrl,
   parseQueryString,
   parseUrl,
@@ -261,3 +262,17 @@ function testParseQueryString() {
 }
 
 testParseQueryString();
+
+const url2 = overrideUrl({
+  url: "https://example.com?a=1&b=2",
+  params: { c: "#" },
+  encodeURI: true,
+});
+console.log(url2);
+
+// console.log(isEncoded("#"));
+// console.log(isEncoded("%23"));
+// console.log(isEncoded("哈哈"));
+// console.log(isEncoded("%E5%93%88%E5%93%88"));
+
+console.log(safeEncodeURIComponent("#哈哈"));

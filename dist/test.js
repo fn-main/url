@@ -126,4 +126,15 @@ function testParseQueryString() {
     console.log("All parseQueryString tests passed!");
 }
 testParseQueryString();
+const url2 = (0, index_1.overrideUrl)({
+    url: "https://example.com?a=1&b=2",
+    params: { c: "#" },
+    encodeURI: true,
+});
+console.log(url2);
+// console.log(isEncoded("#"));
+// console.log(isEncoded("%23"));
+// console.log(isEncoded("哈哈"));
+// console.log(isEncoded("%E5%93%88%E5%93%88"));
+console.log((0, index_1.safeEncodeURIComponent)("#哈哈"));
 //# sourceMappingURL=test.js.map
