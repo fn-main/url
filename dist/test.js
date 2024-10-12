@@ -84,4 +84,46 @@ console.log("\nTesting safeDecodeURIComponent:");
 assert((0, index_1.safeDecodeURIComponent)("key%3Dvalue%26special%3D!%40%23%24%25%5E%26*()"), "key=value&special=!@#$%^&*()", "Encoded string should be properly decoded");
 assert((0, index_1.safeDecodeURIComponent)("key=value&special=!@#$%^&*()"), "key=value&special=!@#$%^&*()", "Unencoded string should not change");
 assert((0, index_1.safeDecodeURIComponent)("invalid%2Gencoding"), "invalid%2Gencoding", "Invalid encoding should not change");
+function testParseQueryString() {
+    console.log("\nTesting parseQueryString:");
+    // Test basic functionality
+    assert(JSON.stringify((0, index_1.parseQueryString)({ queryString: "a=1&b=2" })), JSON.stringify({ a: 1, b: 2 }), "Basic parsing with numbers");
+    // Test with different types
+    assert(JSON.stringify((0, index_1.parseQueryString)({
+        queryString: 'str=hello&num=42&bool=true&json={"key":"value"}&date=2023-04-14T12:00:00Z',
+    })), JSON.stringify({
+        str: "hello",
+        num: 42,
+        bool: true,
+        json: { key: "value" },
+        date: new Date("2023-04-14T12:00:00Z"),
+    }), "Parsing different types with auto inference");
+    // Test with empty values
+    assert(JSON.stringify((0, index_1.parseQueryString)({ queryString: "empty=&null=null&undefined=undefined" })), JSON.stringify({ empty: "", null: null, undefined: undefined }), "Parsing empty, null, and undefined values");
+    // Test with encoded values
+    assert(JSON.stringify((0, index_1.parseQueryString)({
+        queryString: "encoded=hello%20world&special=%21%40%23%24%25%5E%26*%28%29",
+    })), JSON.stringify({ encoded: "hello world", special: "!@#$%^&*()" }), "Parsing encoded values");
+    // Test with paramTypeMap
+    assert(JSON.stringify((0, index_1.parseQueryString)({
+        queryString: "forceString=42&forceNumber=abc",
+        paramTypeMap: { forceString: "string", forceNumber: "number" },
+        autoInferType: false,
+    })), JSON.stringify({ forceString: "42", forceNumber: NaN }), "Parsing with paramTypeMap");
+    // Test with autoInferType set to false
+    assert(JSON.stringify((0, index_1.parseQueryString)({
+        queryString: 'num=42&bool=true&json={"key":"value"}',
+        autoInferType: false,
+    })), JSON.stringify({ num: "42", bool: "true", json: '{"key":"value"}' }), "Parsing without type inference");
+    // Test with raw Chinese
+    assert(JSON.stringify((0, index_1.parseQueryString)({
+        queryString: "zh=中文",
+    })), JSON.stringify({ zh: "中文" }), "Parsing with raw Chinese");
+    // Test with raw encoded Chinese
+    assert(JSON.stringify((0, index_1.parseQueryString)({
+        queryString: "zh=%E4%B8%AD%E6%96%87",
+    })), JSON.stringify({ zh: "中文" }), "Parsing with encodedChinese");
+    console.log("All parseQueryString tests passed!");
+}
+testParseQueryString();
 //# sourceMappingURL=test.js.map

@@ -165,7 +165,7 @@ function buildQueryString({ params, encodeURI = false, removeEmptyParams = false
     }
     const paramPairs = entries.map(([key, value]) => {
         let strValue = stringifyValue(value);
-        strValue = encodeURI ? encodeURIComponent(strValue) : strValue;
+        strValue = encodeURI ? safeEncodeURI(strValue) : strValue;
         return `${key}=${strValue}`;
     });
     if (paramPairs.length === 0) {

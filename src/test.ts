@@ -165,3 +165,99 @@ assert(
   "invalid%2Gencoding",
   "Invalid encoding should not change"
 );
+
+function testParseQueryString() {
+  console.log("\nTesting parseQueryString:");
+  // Test basic functionality
+  assert(
+    JSON.stringify(parseQueryString({ queryString: "a=1&b=2" })),
+    JSON.stringify({ a: 1, b: 2 }),
+    "Basic parsing with numbers"
+  );
+
+  // Test with different types
+  assert(
+    JSON.stringify(
+      parseQueryString({
+        queryString: 'str=hello&num=42&bool=true&json={"key":"value"}&date=2023-04-14T12:00:00Z',
+      })
+    ),
+    JSON.stringify({
+      str: "hello",
+      num: 42,
+      bool: true,
+      json: { key: "value" },
+      date: new Date("2023-04-14T12:00:00Z"),
+    }),
+    "Parsing different types with auto inference"
+  );
+
+  // Test with empty values
+  assert(
+    JSON.stringify(parseQueryString({ queryString: "empty=&null=null&undefined=undefined" })),
+    JSON.stringify({ empty: "", null: null, undefined: undefined }),
+    "Parsing empty, null, and undefined values"
+  );
+
+  // Test with encoded values
+  assert(
+    JSON.stringify(
+      parseQueryString({
+        queryString: "encoded=hello%20world&special=%21%40%23%24%25%5E%26*%28%29",
+      })
+    ),
+    JSON.stringify({ encoded: "hello world", special: "!@#$%^&*()" }),
+    "Parsing encoded values"
+  );
+
+  // Test with paramTypeMap
+  assert(
+    JSON.stringify(
+      parseQueryString({
+        queryString: "forceString=42&forceNumber=abc",
+        paramTypeMap: { forceString: "string", forceNumber: "number" },
+        autoInferType: false,
+      })
+    ),
+    JSON.stringify({ forceString: "42", forceNumber: NaN }),
+    "Parsing with paramTypeMap"
+  );
+
+  // Test with autoInferType set to false
+  assert(
+    JSON.stringify(
+      parseQueryString({
+        queryString: 'num=42&bool=true&json={"key":"value"}',
+        autoInferType: false,
+      })
+    ),
+    JSON.stringify({ num: "42", bool: "true", json: '{"key":"value"}' }),
+    "Parsing without type inference"
+  );
+
+  // Test with raw Chinese
+  assert(
+    JSON.stringify(
+      parseQueryString({
+        queryString: "zh=中文",
+      })
+    ),
+    JSON.stringify({ zh: "中文" }),
+    "Parsing with raw Chinese"
+  );
+
+  // Test with raw encoded Chinese
+  assert(
+    JSON.stringify(
+      parseQueryString({
+        queryString: "zh=%E4%B8%AD%E6%96%87",
+      })
+    ),
+    JSON.stringify({ zh: "中文" }),
+    "Parsing with encodedChinese"
+  );
+
+  console.log("All parseQueryString tests passed!");
+}
+
+testParseQueryString();

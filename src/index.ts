@@ -204,7 +204,7 @@ export function buildQueryString({
 
   const paramPairs = entries.map(([key, value]) => {
     let strValue = stringifyValue(value);
-    strValue = encodeURI ? encodeURIComponent(strValue) : strValue;
+    strValue = encodeURI ? safeEncodeURI(strValue) : strValue;
     return `${key}=${strValue}`;
   });
 
