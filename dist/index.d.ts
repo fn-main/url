@@ -24,7 +24,7 @@ export declare function buildQueryString({ params, encodeURI, removeEmptyParams,
     removeEmptyParams?: Boolean;
     sort?: Boolean;
 }): string;
-export declare function encodeSpecialChars(str: string): string;
+export declare function encodeSpecialChars(str: string, regex?: RegExp): string;
 export declare function overrideUrl({ url, params, encodeURI, removeEmptyParams, sort, }: {
     url: string;
     params: {
