@@ -207,7 +207,7 @@ export function buildQueryString({
     if (encodeURI) {
       strValue = safeEncodeURIComponent(strValue);
     } else {
-      strValue = strValue.replace(/([?=&#/+ %])/g, encodeURIComponent);
+      strValue = encodeSpecialChars(strValue);
     }
     return `${key}=${strValue}`;
   });
@@ -217,6 +217,10 @@ export function buildQueryString({
   }
 
   return "?" + paramPairs.join("&");
+}
+
+export function encodeSpecialChars(str: string): string {
+  return str.replace(/([?=&#/+ %])/g, encodeURIComponent);
 }
 
 export function overrideUrl({

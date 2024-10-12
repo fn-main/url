@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.safeDecodeURI = exports.safeEncodeURI = exports.safeDecodeURIComponent = exports.safeEncodeURIComponent = exports.isEncoded = exports.joinPath = exports.decodeMiniProgramWebviewUrl = exports.encodeMiniProgramWebviewUrl = exports.parseUrl = exports.removeUrlParams = exports.overrideUrl = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
+exports.safeDecodeURI = exports.safeEncodeURI = exports.safeDecodeURIComponent = exports.safeEncodeURIComponent = exports.isEncoded = exports.joinPath = exports.decodeMiniProgramWebviewUrl = exports.encodeMiniProgramWebviewUrl = exports.parseUrl = exports.removeUrlParams = exports.overrideUrl = exports.encodeSpecialChars = exports.buildQueryString = exports.parseUrlParams = exports.parseQueryString = void 0;
 var Type;
 (function (Type) {
     Type[Type["Undefined"] = 0] = "Undefined";
@@ -169,7 +169,7 @@ function buildQueryString({ params, encodeURI = false, removeEmptyParams = false
             strValue = safeEncodeURIComponent(strValue);
         }
         else {
-            strValue = strValue.replace(/([?=&#/+ %])/g, encodeURIComponent);
+            strValue = encodeSpecialChars(strValue);
         }
         return `${key}=${strValue}`;
     });
@@ -179,6 +179,10 @@ function buildQueryString({ params, encodeURI = false, removeEmptyParams = false
     return "?" + paramPairs.join("&");
 }
 exports.buildQueryString = buildQueryString;
+function encodeSpecialChars(str) {
+    return str.replace(/([?=&#/+ %])/g, encodeURIComponent);
+}
+exports.encodeSpecialChars = encodeSpecialChars;
 function overrideUrl({ url, params, encodeURI = false, removeEmptyParams = false, sort = false, }) {
     const { domain, pathname, search, hash } = parseUrl(url);
     const oldParams = parseQueryString({
