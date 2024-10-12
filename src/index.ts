@@ -219,8 +219,8 @@ export function buildQueryString({
   return "?" + paramPairs.join("&");
 }
 
-export function encodeSpecialChars(str: string, regex?: RegExp): string {
-  return str.replace(regex || /([?=&#/+ %])/g, encodeURIComponent);
+export function encodeSpecialChars(str: string, regex: RegExp = /([?=&#/+ %])/g): string {
+  return str.replace(regex, encodeURIComponent);
 }
 
 export function overrideUrl({

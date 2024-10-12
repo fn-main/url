@@ -179,8 +179,8 @@ function buildQueryString({ params, encodeURI = false, removeEmptyParams = false
     return "?" + paramPairs.join("&");
 }
 exports.buildQueryString = buildQueryString;
-function encodeSpecialChars(str, regex) {
-    return str.replace(regex || /([?=&#/+ %])/g, encodeURIComponent);
+function encodeSpecialChars(str, regex = /([?=&#/+ %])/g) {
+    return str.replace(regex, encodeURIComponent);
 }
 exports.encodeSpecialChars = encodeSpecialChars;
 function overrideUrl({ url, params, encodeURI = false, removeEmptyParams = false, sort = false, }) {
